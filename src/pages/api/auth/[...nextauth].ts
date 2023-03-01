@@ -9,6 +9,9 @@ export const authOptions = {
       clientSecret: process.env.TWITCH_CLIENT_SECRET!
     })
   ],
+  pages: {
+    signIn: '/',
+  }
 }
 
 export default NextAuth(authOptions)
