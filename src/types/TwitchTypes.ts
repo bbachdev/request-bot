@@ -5,4 +5,5 @@ export interface UserData {
   broadcaster_type:  string;
   description:       string;
   profile_image_url: string;
+  role?:             string;
 }

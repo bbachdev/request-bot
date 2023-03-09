@@ -1,5 +1,7 @@
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import NextAuth from "next-auth"
 import TwitchProvider from "next-auth/providers/twitch"
+import prisma from "@/lib/prismadb"
 
 async function refreshTwitchAccessToken(token : any) {
   try{
@@ -43,6 +45,10 @@ async function refreshTwitchAccessToken(token : any) {
 
 export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
+  adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: 'jwt',
+  },
   providers: [
     TwitchProvider({
       clientId: process.env.TWITCH_CLIENT_ID!,
@@ -55,6 +61,9 @@ export const authOptions = {
   callbacks: {
     async jwt({ token, account = {}, user, profile } : any) {
       if (account && user) {
+        if(account.providerAccountId){
+          token.providerAccountId = account.providerAccountId
+        }
         if(account.access_token){
           token.accessToken = account.access_token
         }
@@ -71,8 +80,12 @@ export const authOptions = {
       // Access token has expired, try to update it
       let refreshedTokens = await refreshTwitchAccessToken(token)
       return refreshedTokens
+    },
+    async session({ session, token, user } : any) {
+      session.user.id = token.providerAccountId
+      return session
     }
-  }
+  },
 }
 
 export default NextAuth(authOptions)
