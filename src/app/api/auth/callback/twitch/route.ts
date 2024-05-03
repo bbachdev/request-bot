@@ -29,50 +29,48 @@ export async function GET(request: Request) {
           "Client-Id": process.env.TWITCH_API_CLIENT_ID!
         }
       });
-      const user = await response.json();
+      const userRes = await response.json();
 
-      console.log('User info: ', user);
+      const user = userRes.data[0]
 
       // Check if user already exists, and log in if so
       const db = initDb();
 
       const dbUser = await db.select().from(schema.userTable).where(eq(schema.userTable.twitch_id, user.id)).limit(1)
       if(dbUser.length > 0) {
-        const session = await lucia.createSession(dbUser[0].id, {});
-        const sessionCookie = lucia.createSessionCookie(session.id);
-        return new Response(null, {
-          status: 302,
-          headers: {
-            Location: "/",
-            "Set-Cookie": sessionCookie.serialize()
-          }
+        const session = await lucia.createSession(dbUser[0].id, {
+          display_name: user.display_name,
+          avatar_url: user.profile_image_url,
         });
+
+        const sessionCookie = lucia.createSessionCookie(session.id);
+
+        cookieStore.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+      }else {
+          // Else, create user
+        const newUserId = generateIdFromEntropySize(16);
+
+        type NewUser = typeof schema.userTable.$inferInsert;
+
+        const newUser: NewUser = {
+          id: newUserId,
+          email: user.email,
+          twitch_id: user.id
+        };
+
+        await db.insert(schema.userTable).values(newUser);
+
+        const session = await lucia.createSession(newUserId, {
+          display_name: user.display_name,
+          avatar_url: user.profile_image_url,
+        });
+        const sessionCookie = lucia.createSessionCookie(session.id);
+
+        cookieStore.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
       }
-
-      // Else, create user
-      const newUserId = generateIdFromEntropySize(16);
-
-      type NewUser = typeof schema.userTable.$inferInsert;
-
-      const newUser: NewUser = {
-        id: newUserId,
-        email: user.email,
-        twitch_id: user.id
-      };
-
-      await db.insert(schema.userTable).values(newUser);
-
-      const session = await lucia.createSession(newUserId, {});
-      const sessionCookie = lucia.createSessionCookie(session.id);
-      return new Response(null, {
-        status: 302,
-        headers: {
-          Location: "/",
-          "Set-Cookie": sessionCookie.serialize()
-        }
-      });
     }
     catch (error) {
+      console.log('Error:',error);
       if (error instanceof OAuth2RequestError) {
         // bad verification code, invalid credentials, etc
         return new Response(null, {
@@ -82,5 +80,8 @@ export async function GET(request: Request) {
       return new Response(null, {
         status: 500
       });
+    }
+    finally {
+      return redirect('/');
     }
 }

@@ -5,6 +5,17 @@ import { DrizzleAdapter } from './db_adapter';
 const adapter = DrizzleAdapter;
 
 export const lucia = new Lucia(adapter, {
+  getSessionAttributes: (attributes) => {
+    return {
+      displayName: attributes.display_name,
+      avatarUrl: attributes.avatar_url
+    }
+  },
+  getUserAttributes: (attributes) => {
+    return {
+      twitchId: attributes.twitch_id
+    }
+  },
 	sessionCookie: {
 		// this sets cookies with super long expiration
 		// since Next.js doesn't allow Lucia to extend cookie expiration when rendering pages
@@ -22,5 +33,15 @@ export const twitch = new Twitch(process.env.TWITCH_API_CLIENT_ID!, process.env.
 declare module "lucia" {
 	interface Register {
 		Lucia: typeof lucia;
+    DatabaseSessionAttributes: DatabaseSessionAttributes;
+    DatabaseUserAttributes: DatabaseUserAttributes;
 	}
+}
+
+interface DatabaseSessionAttributes {
+  display_name: string;
+  avatar_url: string;
+}
+interface DatabaseUserAttributes {
+  twitch_id: string;
 }

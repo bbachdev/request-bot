@@ -1,8 +1,8 @@
 'use server'
 
-import { twitch } from "@/util/auth";
+import { lucia, twitch } from "@/util/auth";
+import { validateRequest } from '@/util/auth_validate';
 import { generateState } from "arctic";
-import { serializeCookie } from "oslo/cookie";
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation';
 
@@ -15,4 +15,18 @@ export async function createAuthUrl() {
   const cookieStore = cookies()
   cookieStore.set("twitch_oauth_state", state, { httpOnly: true, secure: process.env.NODE_ENV === "production", maxAge: 60 * 10, path: "/" });
   redirect(url.toString());
+}
+
+export async function signOut() {
+  console.log("signOut");
+  const { session } = await validateRequest();
+	if (!session) {
+		return {
+			error: "Unauthorized"
+		};
+	}
+  await lucia.invalidateSession(session.id);
+  const sessionCookie = lucia.createBlankSessionCookie();
+	cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+  return redirect("/")
 }

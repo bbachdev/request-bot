@@ -1,10 +1,8 @@
 import { cookies } from "next/headers";
 import { cache } from "react";
 
-import { Lucia, type Session, type User } from "lucia";
-import { DrizzleAdapter } from '@/util/db_adapter';
-
-export const lucia = new Lucia(DrizzleAdapter);
+import type { Session, User } from "lucia";
+import { lucia } from "@/util/auth";
 
 export const validateRequest = cache(
 	async (): Promise<{ user: User; session: Session } | { user: null; session: null }> => {
