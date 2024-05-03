@@ -1,4 +1,5 @@
 import { Lucia } from "lucia";
+import { Twitch } from "arctic";
 import { DrizzleAdapter } from './db_adapter';
 
 const adapter = DrizzleAdapter;
@@ -14,6 +15,8 @@ export const lucia = new Lucia(adapter, {
 		}
 	}
 });
+
+export const twitch = new Twitch(process.env.TWITCH_API_CLIENT_ID!, process.env.TWITCH_API_SECRET!, process.env.TWITCH_REDIRECT_URI!);
 
 // IMPORTANT!
 declare module "lucia" {
