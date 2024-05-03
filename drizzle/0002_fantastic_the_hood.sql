@@ -1,0 +1,1 @@
+ALTER TABLE "user" ADD CONSTRAINT "user_twitch_id_unique" UNIQUE("twitch_id");
