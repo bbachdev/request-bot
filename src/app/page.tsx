@@ -6,10 +6,6 @@ import SignInButton from '@/components/auth/SignInButton';
 export default async function Home() {
   //Check if user is logged in
   const { user, session } = await validateRequest();
-	if(user) {
-    console.log('User:',user);
-    console.log('Session:',session);
-  }
 
   return (
     <main className="flex flex-col items-center justify-between p-24">

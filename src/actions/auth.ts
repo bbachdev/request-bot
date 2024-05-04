@@ -2,6 +2,7 @@
 
 import { lucia, twitch } from "@/util/auth";
 import { validateRequest } from '@/util/auth_validate';
+import { TWITCH_ACCESS_TOKEN_NAME, TWITCH_REFRESH_TOKEN_NAME } from '@/util/twitch';
 import { generateState } from "arctic";
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation';
@@ -28,5 +29,8 @@ export async function signOut() {
   await lucia.invalidateSession(session.id);
   const sessionCookie = lucia.createBlankSessionCookie();
 	cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
+  cookies().delete('twitch_oauth_state')
+  cookies().delete(TWITCH_ACCESS_TOKEN_NAME)
+  cookies().delete(TWITCH_REFRESH_TOKEN_NAME)
   return redirect("/")
 }

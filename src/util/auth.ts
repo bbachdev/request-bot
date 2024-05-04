@@ -8,7 +8,7 @@ export const lucia = new Lucia(adapter, {
   getSessionAttributes: (attributes) => {
     return {
       displayName: attributes.display_name,
-      avatarUrl: attributes.avatar_url
+      avatarUrl: attributes.avatar_url,
     }
   },
   getUserAttributes: (attributes) => {
