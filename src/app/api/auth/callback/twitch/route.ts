@@ -6,7 +6,7 @@ import { generateIdFromEntropySize } from "lucia";
 import { initDb } from '@/util/db';
 import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
-import { TWITCH_ACCESS_TOKEN_NAME, TWITCH_REFRESH_TOKEN_NAME } from '@/util/twitch';
+import { TWITCH_ACCESS_TOKEN_EXPIRES, TWITCH_ACCESS_TOKEN_NAME, TWITCH_REFRESH_TOKEN_NAME } from '@/util/twitch';
 
 
 export async function GET(request: Request) {
@@ -40,6 +40,7 @@ export async function GET(request: Request) {
 
       console.log('Access Token:',tokens.accessToken);
       console.log('Refresh Token:',tokens.refreshToken);
+      console.log('Expires:',tokens.accessTokenExpiresAt);
 
       const dbUser = await db.select().from(schema.userTable).where(eq(schema.userTable.twitch_id, user.id)).limit(1)
       if(dbUser.length > 0) {
@@ -75,8 +76,9 @@ export async function GET(request: Request) {
 
         cookieStore.set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
       }
-      cookieStore.set(TWITCH_ACCESS_TOKEN_NAME, tokens.accessToken, { httpOnly: true, sameSite: "strict", secure: process.env.NODE_ENV === "production", maxAge: 60 * 10, path: "/" });
-      cookieStore.set(TWITCH_REFRESH_TOKEN_NAME, tokens.refreshToken, { httpOnly: true, sameSite: "strict", secure: process.env.NODE_ENV === "production", maxAge: 60 * 10, path: "/" });
+      cookieStore.set(TWITCH_ACCESS_TOKEN_NAME, tokens.accessToken, { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/" });
+      cookieStore.set(TWITCH_REFRESH_TOKEN_NAME, tokens.refreshToken, { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production",  path: "/" });
+      cookieStore.set(TWITCH_ACCESS_TOKEN_EXPIRES, tokens.accessTokenExpiresAt.toISOString(), { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: "/" });
     }
     catch (error) {
       console.log('Error:',error);
