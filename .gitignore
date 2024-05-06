@@ -37,3 +37,6 @@ next-env.d.ts
 
 # extra drizzle files
 /drizzle/meta
+
+#VS Code
+.vscode
