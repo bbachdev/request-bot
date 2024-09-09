@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import ContentContainer from '@/components/layout/ContentContainer';
 
 export const metadata: Metadata = {
   title: "RequestBot",
@@ -13,7 +14,9 @@ export default function RootLayout( {children}: Readonly<{children: React.ReactN
     <html lang="en">
       <body className={`flex flex-col min-h-dvh bg-slate-800 text-white`}>
         <Header />
-        {children}
+        <ContentContainer>
+          {children}
+        </ContentContainer>
         <Footer />
       </body>
     </html>
