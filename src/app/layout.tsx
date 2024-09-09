@@ -13,9 +13,7 @@ export default function RootLayout( {children}: Readonly<{children: React.ReactN
     <html lang="en">
       <body className={`flex flex-col min-h-dvh bg-slate-800 text-white`}>
         <Header />
-        <main className={`flex-grow`}>
-          {children}
-        </main>
+        {children}
         <Footer />
       </body>
     </html>
