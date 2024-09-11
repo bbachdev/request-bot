@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 export async function signInTwitch() {
-  const twitch = new Twitch(process.env.TWTICH_CLIENT_ID!, process.env.TWITCH_CLIENT_SECRET!, process.env.TWITCH_REDIRECT_URI!);
+  const twitch = new Twitch(process.env.TWITCH_CLIENT_ID!, process.env.TWITCH_CLIENT_SECRET!, process.env.TWITCH_REDIRECT_URI!);
   const state = generateState();
   const scopes = ["activity:write", "read", "user:read:email"];
   const url = twitch.createAuthorizationURL(state, scopes);
