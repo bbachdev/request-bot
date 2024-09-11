@@ -8,7 +8,7 @@ import { redirect } from 'next/navigation';
 export async function signInTwitch() {
   const twitch = new Twitch(process.env.TWITCH_CLIENT_ID!, process.env.TWITCH_CLIENT_SECRET!, process.env.TWITCH_REDIRECT_URI!);
   const state = generateState();
-  const scopes = ["channel:read:vips", "moderation:read", "user:read:blocked_users", "user:read:moderated_channels", "user:read:subscriptions", "user:read:follows"];
+  const scopes = ["channel:read:vips", "moderation:read", "user:read:blocked_users", "user:read:moderated_channels", "user:read:subscriptions"];
   const url = twitch.createAuthorizationURL(state, scopes);
 
   cookies().set("state", state, {
