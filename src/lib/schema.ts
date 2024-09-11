@@ -1,5 +1,5 @@
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
-import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from 'postgres';
 
@@ -12,7 +12,11 @@ export const userTable = pgTable("user", {
 	id: text("id").primaryKey(),
   twitch_id: text("twitch_id").notNull(),
   display_name: text("display_name").notNull(),
-  profile_image_url: text("profile_image_url")
+  profile_image_url: text("profile_image_url"),
+  access_token: text("access_token"),
+  refresh_token: text("refresh_token"),
+  token_expires_at: timestamp("token_expires_at"),
+  last_updated: date("last_updated").defaultNow()
 });
 
 export type NewUser = typeof userTable.$inferInsert;
