@@ -9,9 +9,13 @@ const connectionString = process.env.DATABASE_URL!
 const client = postgres(connectionString, { prepare: false })
 const db = drizzle(client);
 
-const userTable = pgTable("user", {
-	id: text("id").primaryKey()
+export const userTable = pgTable("user", {
+	id: text("id").primaryKey(),
+  twitch_id: text("twitch_id").notNull()
 });
+
+export type NewUser = typeof userTable.$inferInsert;
+export type User = typeof userTable.$inferSelect;
 
 const sessionTable = pgTable("session", {
 	id: text("id").primaryKey(),
