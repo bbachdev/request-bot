@@ -1,5 +1,5 @@
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
-import { date, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from 'postgres';
 
@@ -16,7 +16,7 @@ export const userTable = pgTable("user", {
   access_token: text("access_token"),
   refresh_token: text("refresh_token"),
   token_expires_at: timestamp("token_expires_at"),
-  last_updated: date("last_updated").defaultNow()
+  last_updated: timestamp("last_updated", { mode: 'date' }).notNull().defaultNow()
 });
 
 export type NewUser = typeof userTable.$inferInsert;
