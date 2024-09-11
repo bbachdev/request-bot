@@ -1,19 +1,18 @@
 import { validateRequest } from '@/lib/lucia';
-import { Button } from '../ui/button';
-import { signOut } from '@/actions/auth';
+import UserBadge from '../UserBadge';
 
 export default async function Header() {
   const { user } = await validateRequest();
 
   return (
-    <header className={`flex p-4 shadow-lg`}>
+    <header className={`flex p-4 shadow-lg items-center`}>
       <div>
         Header
       </div>
       { user && (
-        <div>
-          <Button onClick={() => signOut()}>Sign Out</Button>
-        </div>
+        <div className={`ml-auto`}>
+          <UserBadge user={user}/>
+        </div>    
       )}
     </header>
   )

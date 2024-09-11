@@ -36,18 +36,16 @@ export async function GET(request: NextRequest) {
       }
     });
     const userResponse = await response.json();
-    console.log('Response: ', userResponse)
     const userData = userResponse.data[0];
     
     //Check if user exists in DB
     const connectionString = process.env.DATABASE_URL!
-    console.log("Connection String: ", connectionString)
 
     const client = postgres(connectionString)
     const db = drizzle(client);
 
     let user: User | undefined = undefined
-    const existingUser = await db.select().from(userTable).where(eq(userTable.id, userData.id))
+    const existingUser = await db.select().from(userTable).where(eq(userTable.twitch_id, userData.id))
     if(existingUser.length > 0){
       //Set user
       user = existingUser[0]
@@ -60,11 +58,8 @@ export async function GET(request: NextRequest) {
       await db.insert(userTable).values(user)
     }
     //Log in user
-    console.log(user)
     const session = await lucia.createSession(user.id, {display_name: userData.display_name, profile_image_url: userData.profile_image_url});
-    console.log("Create Session Cookie")
 		const sessionCookie = lucia.createSessionCookie(session.id);
-    console.log("Redirect to previous page")
     return new Response(null, {
 			status: 302,
 			headers: {

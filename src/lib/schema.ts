@@ -1,12 +1,11 @@
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
-
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from 'postgres';
 
-const connectionString = process.env.DATABASE_URL!
+const connectionString = process.env.DATABASE_URL_SESSION!
 
-const client = postgres(connectionString, { prepare: false })
+const client = postgres(connectionString)
 const db = drizzle(client);
 
 export const userTable = pgTable("user", {
