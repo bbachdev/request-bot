@@ -17,7 +17,7 @@ export const userTable = pgTable("user", {
 export type NewUser = typeof userTable.$inferInsert;
 export type User = typeof userTable.$inferSelect;
 
-const sessionTable = pgTable("session", {
+export const sessionTable = pgTable("session", {
 	id: text("id").primaryKey(),
 	userId: text("user_id")
 		.notNull()
