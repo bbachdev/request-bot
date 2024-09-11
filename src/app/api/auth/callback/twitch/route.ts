@@ -1,13 +1,12 @@
 import { OAuth2RequestError } from "arctic";
 import { cookies } from 'next/headers';
 import { Twitch } from "arctic";
-import { drizzle } from 'drizzle-orm/postgres-js'
 import { eq } from 'drizzle-orm'
 import { userTable, User } from '@/lib/schema'
-import postgres from 'postgres';
 import { generateIdFromEntropySize } from "lucia";
 import { lucia } from '@/lib/lucia';
 import { NextRequest } from 'next/server';
+import { initDb } from '@/lib/db';
 
 
 export async function GET(request: NextRequest) {
@@ -25,10 +24,8 @@ export async function GET(request: NextRequest) {
     const twitch = new Twitch(clientId, process.env.TWITCH_CLIENT_SECRET!, process.env.TWITCH_REDIRECT_URI!);
     const tokens = await twitch.validateAuthorizationCode(code);
     const accessToken = tokens.accessToken();
-    //TODO: USE THESE
-    //const accessTokenExpiresAt = tokens.accessTokenExpiresAt();
-    //const refreshToken = tokens.refreshToken();
-    //
+    const refreshToken = tokens.refreshToken();
+
     const response = await fetch("https://api.twitch.tv/helix/users", {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -39,15 +36,17 @@ export async function GET(request: NextRequest) {
     const userData = userResponse.data[0];
     
     //Check if user exists in DB
-    const connectionString = process.env.DATABASE_URL!
-
-    const client = postgres(connectionString)
-    const db = drizzle(client);
+    const db = initDb()
 
     let user: User | undefined = undefined
     const existingUser = await db.select().from(userTable).where(eq(userTable.twitch_id, userData.id))
     if(existingUser.length > 0){
-      //TODO: Update user if name or profile image changes
+      //Update user with new tokens and, if changed, name and profile image
+      existingUser[0].display_name = userData.display_name
+      existingUser[0].profile_image_url = userData.profile_image_url
+      existingUser[0].access_token = accessToken
+      existingUser[0].refresh_token = refreshToken
+      await db.update(userTable).set(existingUser[0]).where(eq(userTable.twitch_id, userData.id))
 
       //Set user
       user = existingUser[0]
@@ -57,7 +56,9 @@ export async function GET(request: NextRequest) {
         id: generateIdFromEntropySize(10),
         twitch_id: userData.id,
         display_name: userData.display_name,
-        profile_image_url: userData.profile_image_url
+        profile_image_url: userData.profile_image_url,
+        access_token: accessToken,
+        refresh_token: refreshToken,
       }
       await db.insert(userTable).values(user)
     }
