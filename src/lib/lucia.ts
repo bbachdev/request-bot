@@ -14,16 +14,28 @@ export const lucia = new Lucia(adapter, {
 			// set to `true` when using HTTPS
 			secure: process.env.NODE_ENV === "production"
 		}
+	},
+  getUserAttributes: (attributes) => {
+		return {
+			display_name: attributes.display_name,
+      profile_image_url: attributes.profile_image_url
+		};
 	}
 });
-
 
 // IMPORTANT!
 declare module "lucia" {
 	interface Register {
 		Lucia: typeof lucia;
+    DatabaseUserAttributes: DatabaseUserAttributes
 	}
 }
+
+interface DatabaseUserAttributes {
+	display_name: string
+  profile_image_url: string
+}
+
 
 export const validateRequest = cache(
   async (): Promise<{ user: User; session: Session } | { user: null; session: null }> => {

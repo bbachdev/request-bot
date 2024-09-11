@@ -32,7 +32,9 @@ export async function POST(request: Request) {
         "Client-Id": clientId
       }
     });
-    const userData = await response.json();
+    const userResponse = await response.json();
+    console.log('Response: ', userResponse)
+    const userData = userResponse.data[0];
     
     //Check if user exists in DB
     const connectionString = process.env.DATABASE_URL!
@@ -55,7 +57,7 @@ export async function POST(request: Request) {
     }
     //Log in user
     console.log(user)
-    const session = await lucia.createSession(user.id, {});
+    const session = await lucia.createSession(user.id, {display_name: userData.display_name, profile_image_url: userData.profile_image_url});
 		const sessionCookie = lucia.createSessionCookie(session.id);
     return new Response(null, {
 			status: 302,
