@@ -8,6 +8,13 @@
       "when": 1726018591423,
       "tag": "0000_oval_owl",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1726025105125,
+      "tag": "0001_fearless_alex_power",
+      "breakpoints": true
     }
   ]
 }
