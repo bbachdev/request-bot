@@ -72,7 +72,7 @@ export const queueItemTable = pgTable("queue_item", {
 	position: integer("position").notNull()
 });
 
-export type QueueItem = typeof queueItemTable.$inferSelect;
-export type NewQueueItem = typeof queueItemTable.$inferInsert;
+export type QueueItemDB = typeof queueItemTable.$inferSelect;
+export type NewQueueItemDB = typeof queueItemTable.$inferInsert;
 
 export const adapter = new DrizzlePostgreSQLAdapter(db, sessionTable, userTable);
