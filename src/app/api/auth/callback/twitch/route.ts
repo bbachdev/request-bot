@@ -47,13 +47,17 @@ export async function GET(request: NextRequest) {
     let user: User | undefined = undefined
     const existingUser = await db.select().from(userTable).where(eq(userTable.twitch_id, userData.id))
     if(existingUser.length > 0){
+      //TODO: Update user if name or profile image changes
+
       //Set user
       user = existingUser[0]
     }else{
       //If not found, create user
       user = {
         id: generateIdFromEntropySize(10),
-        twitch_id: userData.id
+        twitch_id: userData.id,
+        display_name: userData.display_name,
+        profile_image_url: userData.profile_image_url
       }
       await db.insert(userTable).values(user)
     }
