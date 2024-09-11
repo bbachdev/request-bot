@@ -14,9 +14,7 @@ export const userTable = pgTable("user", {
   display_name: text("display_name").notNull(),
   profile_image_url: text("profile_image_url"),
   access_token: text("access_token"),
-  refresh_token: text("refresh_token"),
-  token_expires_at: timestamp("token_expires_at"),
-  last_updated: timestamp("last_updated", { mode: 'date' }).notNull().defaultNow()
+  refresh_token: text("refresh_token")
 });
 
 export type NewUser = typeof userTable.$inferInsert;

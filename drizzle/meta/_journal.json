@@ -43,6 +43,13 @@
       "when": 1726079254356,
       "tag": "0005_premium_spiral",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1726079999751,
+      "tag": "0006_high_tomorrow_man",
+      "breakpoints": true
     }
   ]
 }
