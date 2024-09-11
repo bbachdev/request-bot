@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import ContentContainer from '@/components/layout/ContentContainer';
+import Providers from '@/components/layout/Providers';
 
 export const metadata: Metadata = {
   title: "RequestBot",
@@ -13,11 +14,13 @@ export default function RootLayout( {children}: Readonly<{children: React.ReactN
   return (
     <html lang="en">
       <body className={`flex flex-col min-h-dvh bg-slate-800 text-white`}>
-        <Header />
-        <ContentContainer>
-          {children}
-        </ContentContainer>
-        <Footer />
+        <Providers>
+          <Header />
+          <ContentContainer>
+            {children}
+          </ContentContainer>
+          <Footer />
+        </Providers>       
       </body>
     </html>
   );
