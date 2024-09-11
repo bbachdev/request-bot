@@ -3,14 +3,16 @@ import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from 'postgres';
 
-const connectionString = process.env.DATABASE_URL_SESSION!
+const connectionString = process.env.DATABASE_URL!
 
-const client = postgres(connectionString)
+const client = postgres(connectionString, { prepare: false })
 const db = drizzle(client);
 
 export const userTable = pgTable("user", {
 	id: text("id").primaryKey(),
-  twitch_id: text("twitch_id").notNull()
+  twitch_id: text("twitch_id").notNull(),
+  display_name: text("display_name").notNull(),
+  profile_image_url: text("profile_image_url")
 });
 
 export type NewUser = typeof userTable.$inferInsert;
