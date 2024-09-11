@@ -8,6 +8,7 @@ import type { Session, User } from "lucia";
 export const lucia = new Lucia(adapter, {
   getUserAttributes: (attributes) => {
 		return {
+      twitch_id: attributes.twitch_id,
 			display_name: attributes.display_name,
       profile_image_url: attributes.profile_image_url
 		};
@@ -32,6 +33,7 @@ declare module "lucia" {
 }
 
 interface DatabaseUserAttributes {
+  twitch_id: string
 	display_name: string
   profile_image_url: string
 }

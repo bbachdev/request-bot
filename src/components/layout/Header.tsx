@@ -3,7 +3,6 @@ import UserBadge from '../UserBadge';
 
 export default async function Header() {
   const { user } = await validateRequest();
-  console.log("User: ", user)
 
   return (
     <header className={`flex p-4 shadow-lg items-center`}>
