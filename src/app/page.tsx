@@ -1,12 +1,16 @@
-'use client'
-import { signInTwitch } from '@/actions/auth';
-import { Button } from '@/components/ui/button';
-import { FaTwitch } from "react-icons/fa6";
+import SignInWithTwitch from '@/components/SignInWithTwitch';
+import { validateRequest } from '@/lib/lucia';
+import { redirect } from 'next/navigation';
 
-export default function Home() {
+export default async function Home() {
+  const { user } = await validateRequest();
+  if(user){
+    redirect(`/t/${user.display_name}`)
+  }
+  
   return (
     <div className={`flex-grow flex items-center justify-center`}>
-      <Button className={`bg-[#9146ff] hover:bg-[#9146ff]/90 gap-2`} onClick={() => signInTwitch()}><FaTwitch size={20}/>Sign In with Twitch</Button>
+      <SignInWithTwitch/>
     </div>
   );
 }

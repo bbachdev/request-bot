@@ -11,7 +11,7 @@ export type QueueItem = {
   cover_image_url: string
 }
 
-export const songColumns: ColumnDef<QueueItem>[] = [
+export const queueColumns: ColumnDef<QueueItem>[] = [
   {
     accessorKey: 'title',
     header: 'Title'
@@ -27,13 +27,5 @@ export const songColumns: ColumnDef<QueueItem>[] = [
   {
     accessorKey: 'notes',
     header: 'Notes'
-  },
-  {
-    accessorKey: 'position',
-    header: 'Position'
-  },
-  {
-    accessorKey: 'cover_image_url',
-    header: 'Cover Image'
   }
 ]

@@ -3,7 +3,7 @@
 import { Song } from '@/lib/schema'
 import { ColumnDef } from "@tanstack/react-table"
 
-export const songColumns: ColumnDef<Song>[] = [
+export const songlistColumns: ColumnDef<Song>[] = [
   {
     accessorKey: 'title',
     header: 'Title'
@@ -11,10 +11,6 @@ export const songColumns: ColumnDef<Song>[] = [
   {
     accessorKey: 'artist',
     header: 'Artist'
-  },
-  {
-    accessorKey: 'cover_image_url',
-    header: 'Cover Image'
   },
   {
     accessorKey: 'times_played',

@@ -2,25 +2,17 @@
 
 import { ColumnDef, flexRender, getCoreRowModel, useReactTable} from "@tanstack/react-table"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
-import { Button } from '../ui/button'
-import { FaPlus } from "react-icons/fa6";
 
-interface QueueProps<TData, TValue> {
+interface SonglistProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
-export default function Queue<TData, TValue>({ columns, data }: QueueProps<TData, TValue>) {
+export default function Queue<TData, TValue>({ columns, data }: SonglistProps<TData, TValue>) {
   const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel()})
 
   return (
     <div className={`flex flex-col gap-2`}>
-      <div className={`flex`}>
-        <Button className={`ml-auto flex flex-row gap-2 items-center`} onClick={() => console.log('test')}>
-          <FaPlus size={14}/>
-          <span>Request</span>
-        </Button>
-      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
